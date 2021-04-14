@@ -33,7 +33,7 @@ def train(args):
     testloader = torch.utils.data.DataLoader(testset, batch_size=4, shuffle=False)
 
     # Define model
-    model = Model(block, layers, num_classes=10, args.dropout).to(device)
+    model = Model(layer=[2, 2, 2], num_classes=10, drop_prob=args.dropout).to(device)
     model.reset_params(args.initialize)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)

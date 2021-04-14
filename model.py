@@ -1,8 +1,31 @@
 import torch
 import torch.nn as nn
 
+class Block(nn.Module):
+    def __init__(self, in_channels, out_channels, stride=1, downsample=None):
+        super(ResidualBlock, self).__init__()
+        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=1, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(out_channels)
+        self.relu = nn.ReLU(inplace=True)
+        self.conv2 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=1, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(out_channels)
+        self.downsample = downsample
+
+    def forward(self, x):
+        residual = x
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.relu(out)
+        out = self.conv2(out)
+        out = self.bn2(out)
+        if self.downsample:
+            residual = self.downsample(x)
+        out += residual
+        out = self.relu(out)
+        return out
+
 class Model(nn.Module):
-    def __init__(self, block, layers, num_classes, drop_prob):
+    def __init__(self, layers, num_classes, drop_prob):
         super(Model, self).__init__()
 
         self.in_channels = 16
@@ -10,9 +33,9 @@ class Model(nn.Module):
         self.conv = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn = nn.BatchNorm2d(16)
         self.relu = nn.ReLU(inplace=True)
-        self.layer1 = self.make_layer(block, 16, layers[0])
-        self.layer2 = self.make_layer(block, 32, layers[1], 2)
-        self.layer3 = self.make_layer(block, 64, layers[2], 2)
+        self.layer1 = self.make_layer(Block, 16, layers[0])
+        self.layer2 = self.make_layer(Block, 32, layers[1], 2)
+        self.layer3 = self.make_layer(Block, 64, layers[2], 2)
         self.avg_pool = nn.AvgPool2d(8)
         self.fc = nn.Linear(64, num_classes)
 
