@@ -60,15 +60,15 @@ class Model(nn.Module):
     def reset_params(self, method):
         if method == "xavier":
             torch.nn.init.xavier_uniform_(self.conv.weight)
-            self.layer1.apply(xavier_init)
-            self.layer2.apply(xavier_init)
-            self.layer3.apply(xavier_init)
+            self.layer1.apply(self.xavier_init)
+            self.layer2.apply(self.xavier_init)
+            self.layer3.apply(self.xavier_init)
             torch.nn.init.xavier_uniform_(self.fc.weight)
         elif method == "he":
             torch.nn.init.kaiming_uniform_(self.conv.weight)
-            self.layer1.apply(xavier_init)
-            self.layer2.apply(xavier_init)
-            self.layer3.apply(xavier_init)
+            self.layer1.apply(self.he_init)
+            self.layer2.apply(self.he_init)
+            self.layer3.apply(self.he_init)
             torch.nn.init.kaiming_uniform_(self.fc.weight)
         else:
             assert ValueError
