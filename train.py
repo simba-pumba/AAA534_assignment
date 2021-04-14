@@ -48,7 +48,7 @@ def train(args):
     for epoch in progress: 
         for i, [image, label] in enumerate(trainloader, 0):
             model.train()
-            x, y = inputs.to(device), labels.to(device)
+            x, y = image.to(device), labels.to(device)
 
             optimizer.zero_grad()
             outputs = model(x)
