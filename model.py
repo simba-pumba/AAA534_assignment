@@ -52,10 +52,12 @@ class Model(nn.Module):
         return nn.Sequential(*layers)
 
     def xavier_init(self, m):
-        torch.nn.init.xavier_uniform_(m.weight)
+        if (type(m) == nn.Linear) or (type(m) == nn.Conv2d):
+            torch.nn.init.xavier_uniform_(m.weight)
 
     def he_init(self, m):
-        torch.nn.init.kaiming_uniform_(m.weight)
+        if (type(m) == nn.Linear) or (type(m) == nn.Conv2d):
+            torch.nn.init.kaiming_uniform_(m.weight)
 
     def reset_params(self, method):
         if method == "xavier":
