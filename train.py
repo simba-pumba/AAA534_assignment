@@ -48,7 +48,7 @@ def train(args):
     for epoch in progress: 
         for i, [image, label] in enumerate(trainloader, 0):
             model.train()
-            x, y = image.to(device), labels.to(device)
+            x, y = image.to(device), label.to(device)
 
             optimizer.zero_grad()
             outputs = model(x)
@@ -68,8 +68,8 @@ def train(args):
                     x = image.to(device)
                     y = label.to(device)
                     
-                    output = model(x)
-                    _, output_index = torch.max(output, 1)          
+                    outputs = model(x)
+                    _, output_index = torch.max(outputs, 1)          
 
                     total += label.size(0)
                     correct += (output_index == y).sum().float()
