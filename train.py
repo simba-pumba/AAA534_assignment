@@ -64,7 +64,7 @@ def train(args):
                 model.eval()
                 total = 0.0
                 correct = 0.0
-                for k, [image, label] in enumerate(test_loader):
+                for k, [image, label] in enumerate(testloader):
                     x = image.to(device)
                     y = label.to(device)
                     
@@ -73,16 +73,17 @@ def train(args):
 
                     total += label.size(0)
                     correct += (output_index == y).sum().float()
+                    print(total)
+                    print(correct)
                     
                 test_score = 100*(correct/total)
-                wandb.log({'train': train_score, 'test': test_score})
+                wandb.log({'test': test_score})
 
             if test_score > max_test:
                 max_test = test_score
 
             progress.write(f'Epoch: {epoch:02d}, '
                             f'Loss: {loss:.4f}, '
-                            f'Train: {100 * train_score:.2f}%, '
                             f'Test: {100 * test_score:.2f}%')
 
 
