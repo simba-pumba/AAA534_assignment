@@ -39,7 +39,7 @@ def set_arguments():
 
     parser.add_argument('-batch', 
                         type=int,
-                        default=1024)
+                        default=5096)
 
     parser.add_argument('-gpu', 
                         default=0, 

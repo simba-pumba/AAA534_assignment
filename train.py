@@ -31,7 +31,7 @@ def train(args):
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batch, shuffle=True)
 
     testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=4, shuffle=False)
+    testloader = torch.utils.data.DataLoader(testset, batch_size=args.batch, shuffle=False)
 
     # Define model
     model = Model(layers=[2, 2, 2], num_classes=10, drop_prob=args.dropout).to(device)
@@ -72,11 +72,11 @@ def train(args):
                     _, output_index = torch.max(outputs, 1)          
 
                     total += label.size(0)
-                    correct += (output_index == y).sum().float()
-                    print(total)
-                    print(correct)
+                    correct += (output_index == y).sum().float().item()
                     
-                test_score = 100*(correct/total)
+                    
+                    
+                test_score = (correct/total)*100;
                 wandb.log({'test': test_score})
 
             if test_score > max_test:
@@ -84,7 +84,7 @@ def train(args):
 
             progress.write(f'Epoch: {epoch:02d}, '
                             f'Loss: {loss:.4f}, '
-                            f'Test: {100 * test_score:.2f}%')
+                            f'Test: {test_score:.2f}%')
 
 
     wandb.config.update({"best_loss": min_loss, "best_test": max_test})
